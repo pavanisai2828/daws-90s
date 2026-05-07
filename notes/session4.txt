@@ -217,10 +217,113 @@ key-based authentication
 
 1. create .ssh in ramesh home directory
 2. create authorized_keys inside .ssh
-3. authorized_keys should have max 600 permission
-4. .ssh folder should have max 700 permission
-5. .ssh folder ownership should be ramesh:ramesh recursively
+3. authorized_keys should have max 600 permission(because no once cannot be able to view key)
+4. .ssh folder should have max 700 permission(because no once cannot be able to view key)
+5. .ssh folder ownership should be ramesh:ramesh recursively (because no once cannot be able to view key)
+G PAVANI@PAVANI-MALLI MINGW64 ~
+$ mkdir Ramesh
 
-ssh -i ramesh ramesh@54.173.115.209
+G PAVANI@PAVANI-MALLI MINGW64 ~
+$ cd Ramesh
+
+G PAVANI@PAVANI-MALLI MINGW64 ~/Ramesh
+$ ssh-keygen -f Ramesh
+Generating public/private ed25519 key pair.
+Enter passphrase for "Ramesh" (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in Ramesh
+Your public key has been saved in Ramesh.pub
+The key fingerprint is:
+SHA256:ANqsQ7pdU4ybRnFhPdspjdANsxsIN1Av/6mvT+70TN4 G PAVANI@PAVANI-MALLI
+The key's randomart image is:
++--[ED25519 256]--+
+|    =oB+oo       |
+|   + X.++o.      |
+|  o = *.+* .     |
+| o o + ++o+      |
+|. o *   S.       |
+| o + .   . .     |
+|. .       = .    |
+|         = = .   |
+|        o== + E  |
++----[SHA256]-----+
+
+[root@ip-172-31-26-82 ~]# cd /home/ramesh
+[root@ip-172-31-26-82 ramesh]# ls -la
+total 16
+drwx------. 2 ramesh devops 101 May  7 20:41 .
+drwxr-xr-x. 7 root   root    79 May  7 19:59 ..
+-rw-------. 1 ramesh devops 212 May  7 19:58 .bash_history
+-rw-r--r--. 1 ramesh devops  18 Jan 28  2023 .bash_logout
+-rw-r--r--. 1 ramesh devops 141 Jan 28  2023 .bash_profile
+-rw-r--r--. 1 ramesh devops 492 Jan 28  2023 .bashrc
+-rw-r-----. 1 ramesh devops   0 May  7 19:30 devops.txt
+[root@ip-172-31-26-82 ramesh]# mkdir .ssh
+[root@ip-172-31-26-82 ramesh]# cd .ssh
+[root@ip-172-31-26-82 .ssh]# vim authorized_keys
+[root@ip-172-31-26-82 .ssh]# ls -l
+total 4
+-rw-r--r--. 1 root root 73 May  7 20:42 authorized_keys
+[root@ip-172-31-26-82 .ssh]# chmod 600 authorized_keys
+[root@ip-172-31-26-82 .ssh]# ls -l
+total 4
+-rw-------. 1 root root 73 May  7 20:42 authorized_keys
+[root@ip-172-31-26-82 .ssh]# cd ..
+[root@ip-172-31-26-82 ramesh]# ls -laa
+total 16
+drwx------. 3 ramesh devops 113 May  7 20:41 .
+drwxr-xr-x. 7 root   root    79 May  7 19:59 ..
+-rw-------. 1 ramesh devops 212 May  7 19:58 .bash_history
+-rw-r--r--. 1 ramesh devops  18 Jan 28  2023 .bash_logout
+-rw-r--r--. 1 ramesh devops 141 Jan 28  2023 .bash_profile
+-rw-r--r--. 1 ramesh devops 492 Jan 28  2023 .bashrc
+drwxr-xr-x. 2 root   root    29 May  7 20:42 .ssh
+-rw-r-----. 1 ramesh devops   0 May  7 19:30 devops.txt
+[root@ip-172-31-26-82 ramesh]# chmod 700 .ssh
+[root@ip-172-31-26-82 ramesh]# ls -l
+total 0
+-rw-r-----. 1 ramesh devops 0 May  7 19:30 devops.txt
+[root@ip-172-31-26-82 ramesh]# ls -la
+total 16
+drwx------. 3 ramesh devops 113 May  7 20:41 .
+drwxr-xr-x. 7 root   root    79 May  7 19:59 ..
+-rw-------. 1 ramesh devops 212 May  7 19:58 .bash_history
+-rw-r--r--. 1 ramesh devops  18 Jan 28  2023 .bash_logout
+-rw-r--r--. 1 ramesh devops 141 Jan 28  2023 .bash_profile
+-rw-r--r--. 1 ramesh devops 492 Jan 28  2023 .bashrc
+drwx------. 2 root   root    29 May  7 20:42 .ssh
+-rw-r-----. 1 ramesh devops   0 May  7 19:30 devops.txt
+[root@ip-172-31-26-82 ramesh]# chown -R ramesh:ramesh .ssh
+[root@ip-172-31-26-82 ramesh]# ls -la
+total 16
+drwx------. 3 ramesh devops 113 May  7 20:41 .
+drwxr-xr-x. 7 root   root    79 May  7 19:59 ..
+-rw-------. 1 ramesh devops 212 May  7 19:58 .bash_history
+-rw-r--r--. 1 ramesh devops  18 Jan 28  2023 .bash_logout
+-rw-r--r--. 1 ramesh devops 141 Jan 28  2023 .bash_profile
+-rw-r--r--. 1 ramesh devops 492 Jan 28  2023 .bashrc
+drwx------. 2 ramesh ramesh  29 May  7 20:42 .ssh
+-rw-r-----. 1 ramesh devops   0 May  7 19:30 devops.txt
+
+
+ssh -i ramesh ramesh@54.173.115.209(replace server ip)
+G PAVANI@PAVANI-MALLI MINGW64 ~/Ramesh
+$ ssh -i Ramesh ramesh@16.176.29.64
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+   ,     #_
+   ~\_  ####_        Amazon Linux 2023
+  ~~  \_#####\
+  ~~     \###|
+  ~~       \#/ ___   https://aws.amazon.com/linux/amazon-linux-2023
+   ~~       V~' '->
+    ~~~         /
+      ~~._.   _/
+         _/ _/
+       _/m/'
+Last login: Thu May  7 19:59:04 2026 from 106.192.18.113
+[ramesh@ip-172-31-26-82 ~]$
+
 
 /home/ramesh
