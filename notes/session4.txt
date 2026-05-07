@@ -36,7 +36,7 @@ Linux Administration
 1. User management
 
 IAM -> identity access management
-
+Example: After joining into any organisation an Active directory Azure id will be creted so that he can be able to access any of applications in organization with same credentials
 User, Group, Role, Permissions
 A group has multiple users
 A user have specific role
