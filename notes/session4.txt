@@ -63,7 +63,7 @@ usermod -g <group-name> <user-name> -> -g means primary group
 usermod -G <group-name> <user-name> -> adding secondary group
 usermod -aG <group-name> <user-name> -> appending secondary group to user
 
-passwd <user-name>
+passwd <user-name> (chaning password or if first time providing access)
 
 54.173.115.209 ramesh ramesh123
 
@@ -76,6 +76,32 @@ sshd -t -> check for syntax of /etc/ssh/sshd_config file
 
 systemctl restart sshd -> it will restart sshd service
 
+Now ramesh can login
+G PAVANI@PAVANI-MALLI MINGW64 ~
+$ ssh ramesh@16.176.29.64
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+ramesh@16.176.29.64's password:
+   ,     #_
+   ~\_  ####_        Amazon Linux 2023
+  ~~  \_#####\
+  ~~     \###|
+  ~~       \#/ ___   https://aws.amazon.com/linux/amazon-linux-2023
+   ~~       V~' '->
+    ~~~         /
+      ~~._.   _/
+         _/ _/
+       _/m/'
+[ramesh@ip-172-31-26-82 ~]$ pwd
+/home/ramesh
+[ramesh@ip-172-31-26-82 ~]$ touch devops.txt
+[ramesh@ip-172-31-26-82 ~]$ ls -l
+total 0
+-rw-r--r--. 1 ramesh devops 0 May  7 19:30 devops.txt
+[ramesh@ip-172-31-26-82 ~]$
+
+
 how to give sudo access to ramesh
 ================================
 1. add user to wheel group
@@ -84,11 +110,55 @@ how to give sudo access to ramesh
 
 1. remove ramesh from wheel group
 gpasswd -d ramesh wheel
-
-%devops-user-managers    ALL=(ALL)       /usr/sbin/useradd, /usr/sbin/usermod
-
-
+[root@ip-172-31-26-82 ~]# gpasswd -d ramesh wheel
+Removing user ramesh from group wheel
+============================================================================
+Now to give admin commands access to ramesh
+if any changes is made in /etc/sudoers, if any mistakes whole users will effect, Hence please do below
+for example give ramesh acess to useradd command
+[root@ip-172-31-26-82 ~]# vim /etc/sudoers
+[root@ip-172-31-26-82 ~]# cd /etc/sudoers.d
+[root@ip-172-31-26-82 sudoers.d]# which useradd
+/usr/sbin/useradd
+[root@ip-172-31-26-82 sudoers.d]#
+Now create a file in sudoers.d to avoid issues by directly creating in sudoers
+[root@ip-172-31-26-82 sudoers.d]# vim ramesh
+add this line and save it(even if we do in sudores.d  it will push and execute in sudores.d but if any mistakes 
+it will not effect whole sudoers.d file instead it will effect only this file)
+Ramesh    ALL=(ALL)       /usr/sbin/useradd
+after adding check status
+[root@ip-172-31-26-82 sudoers.d]# visudo -c
+/etc/sudoers: parsed OK
+/etc/sudoers.d/90-cloud-init-users: parsed OK
+/etc/sudoers.d/ramesh: bad permissions, should be mode 0440
+now check with ramesh login
+[ramesh@ip-172-31-26-82 ~]$ sudo  useradd pavani
+[sudo] password for ramesh:
+[ramesh@ip-172-31-26-82 ~]$ sudo  usermod -g devops pavani
+Sorry, user ramesh is not allowed to execute '/usr/sbin/usermod -g devops pavani' as root on ip-172-31-26-82.ap-southeast-2.compute.internal.
+[ramesh@ip-172-31-26-82 ~]$
+he is having only access to useradd as we have specified access to only useradd
+=====================================================================================================
+giving permission to group and adding users
 devops-user-managers -> add ramesh to this group, give permissions to this group
+[root@ip-172-31-26-82 ~]# groupadd devops-user-managers
+[root@ip-172-31-26-82 ~]# usermod -aG devops-user-managers ramesh
+[root@ip-172-31-26-82 ~]# id ramesh
+uid=1001(ramesh) gid=1002(devops) groups=1002(devops),1003(developers),1004(testers),1007(devops-user-managers)
+Now comment earlier given ramesh access in sudoers.d file to avoid overrides
+[root@ip-172-31-26-82 sudoers.d]# vim devops-user-managers
+[root@ip-172-31-26-82 sudoers.d]#
+Add below line and save it
+%devops-user-managers    ALL=(ALL)       /usr/sbin/useradd, /usr/sbin/usermod
+Check ramesh permissions now
+[ramesh@ip-172-31-26-82 ~]$ sudo  useradd pavanis
+[sudo] password for ramesh:
+[ramesh@ip-172-31-26-82 ~]$ id pavanis
+uid=1004(pavanis) gid=1008(pavanis) groups=1008(pavanis)
+[ramesh@ip-172-31-26-82 ~]$ sudo usermod -g devops pavanis
+[ramesh@ip-172-31-26-82 ~]$ id pavanis
+uid=1004(pavanis) gid=1002(devops) groups=1002(devops)
+[ramesh@ip-172-31-26-82 ~]$
 
 permissions
 ============
