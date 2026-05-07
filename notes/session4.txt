@@ -169,13 +169,40 @@ permissions
   user/owner	 owner-primary-group	others
   u					g					o
   
-chmod g+w <file-name> -> owner of sudo user can execute this command
+chmod g+w <file-name> -> owner of file or sudo user can execute this command
+
+[ramesh@ip-172-31-26-82 ~]$ ls -l
+total 0
+-rw-r--r--. 1 ramesh devops 0 May  7 19:30 devops.txt
+[ramesh@ip-172-31-26-82 ~]$ chmod g+w devops.txt
+[ramesh@ip-172-31-26-82 ~]$ ls -l
+total 0
+-rw-rw-r--. 1 ramesh devops 0 May  7 19:30 devops.txt
+[ramesh@ip-172-31-26-82 ~]$ chmod ugo+rwx devops.txt
+[ramesh@ip-172-31-26-82 ~]$ ls -l
+total 0
+-rwxrwxrwx. 1 ramesh devops 0 May  7 19:30 devops.txt
+[ramesh@ip-172-31-26-82 ~]$ chmod ugo-x devops.txt
+[ramesh@ip-172-31-26-82 ~]$ ls -l
+total 0
+-rw-rw-rw-. 1 ramesh devops 0 May  7 19:30 devops.txt
+[ramesh@ip-172-31-26-82 ~]$ chmod ug+x devops.txt
+[ramesh@ip-172-31-26-82 ~]$ ls -l
+total 0
+-rwxrwxrw-. 1 ramesh devops 0 May  7 19:30 devops.txt
+[ramesh@ip-172-31-26-82 ~]$
+
 
 r -> 4
 w -> 2
 x -> 1
 
-chmod 640
+chmod 640(ugo-->user --6(full permissions),group--4(only read),others--0(no permissions) 
+[ramesh@ip-172-31-26-82 ~]$ chmod 640 devops.txt
+[ramesh@ip-172-31-26-82 ~]$ ls -l
+total 0
+-rw-r-----. 1 ramesh devops 0 May  7 19:30 devops.txt
+[ramesh@ip-172-31-26-82 ~]$
 
 ownership
 ==========
